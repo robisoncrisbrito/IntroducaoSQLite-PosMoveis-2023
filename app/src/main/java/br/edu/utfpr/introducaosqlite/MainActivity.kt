@@ -13,8 +13,6 @@ import android.widget.Toast
 import java.lang.StringBuilder
 
 class MainActivity : AppCompatActivity() {
-
-
     private lateinit var banco: SQLiteDatabase
     private lateinit var etCod: EditText
     private lateinit var etQtd: EditText
@@ -62,7 +60,6 @@ class MainActivity : AppCompatActivity() {
             saida.append( " " )
             saida.append( registro.getInt( 2 ) )
             saida.append( "\n" )
-
         }
 
         Toast.makeText( this, saida.toString(), Toast.LENGTH_LONG ).show()
