@@ -4,49 +4,40 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import android.widget.Toast
-import br.edu.utfpr.introducaosqlite.entity.Venda
+import br.edu.utfpr.introducaosqlite.entity.Pessoa
 import java.lang.StringBuilder
 
 class DatabaseHandler( context : Context ) : SQLiteOpenHelper ( context, DATABASE_NAME, null, DATABASE_VERSION ) {
 
     companion object {
-        private val DATABASE_NAME = "dbfile.sqlite"
-        private val DATABASE_VERSION = 1
-        private val TABLE_NAME = "vendas"
+        private val DATABASE_NAME = "banco"
+        private val DATABASE_VERSION = 3
+        private val TABLE_NAME = "pessoa"
         private val KEY_ID = "_id"
-        private val KEY_QTD = "qtd"
-        private val KEY_VALOR = "valor"
+        private val KEY_NOME = "nome"
+        private val KEY_TELEFONE = "telefone"
     }
 
-    override fun onCreate(db: SQLiteDatabase?) {
-        db?.execSQL( "CREATE TABLE IF NOT EXISTS ${TABLE_NAME} ( ${KEY_ID} INTEGER PRIMARY KEY AUTOINCREMENT," +
-                " ${KEY_QTD} INTEGER, ${KEY_VALOR} REAL )")
-    }
 
-    override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        db?.execSQL( "DROP TABLE ${TABLE_NAME}" )
-        onCreate( db )
-    }
 
-    fun incluir( venda : Venda ) {
+    fun incluir( pessoa : Pessoa ) {
         val db = this.writableDatabase
 
         val registro = ContentValues()
-        registro.put( KEY_QTD, venda.qtd )
-        registro.put( KEY_VALOR, venda.valor )
+        registro.put( KEY_NOME, pessoa.nome )
+        registro.put( KEY_TELEFONE, pessoa.telefone )
 
         db.insert( TABLE_NAME, null, registro )
     }
 
-    fun alterar( venda : Venda ) {
+    fun alterar( pessoa : Pessoa ) {
         val db = this.writableDatabase
 
         val registro = ContentValues()
-        registro.put( KEY_QTD, venda.qtd )
-        registro.put( KEY_VALOR, venda.valor )
+        registro.put( KEY_NOME, pessoa.nome )
+        registro.put( KEY_TELEFONE, pessoa.telefone )
 
-        db.update( TABLE_NAME, registro, "${KEY_ID} = ${venda._id}", null  )
+        db.update( TABLE_NAME, registro, "${KEY_ID} = ${pessoa._id}", null  )
     }
 
     fun excluir( id : Int ) {
@@ -55,7 +46,7 @@ class DatabaseHandler( context : Context ) : SQLiteOpenHelper ( context, DATABAS
         db.delete( TABLE_NAME, "${KEY_ID} = ${id}", null  )
     }
 
-    fun pesquisar( id : Int ) : Venda? {
+    fun pesquisar( id : Int ) : Pessoa? {
         val db = this.writableDatabase
 
         val registro = db.query( TABLE_NAME, null,
@@ -63,8 +54,8 @@ class DatabaseHandler( context : Context ) : SQLiteOpenHelper ( context, DATABAS
             null, null, null, null );
 
         if( registro.moveToNext() ) {
-            val venda = Venda( id, registro.getInt( 1 ).toString().toInt(), registro.getInt( 2 ).toString().toDouble() )
-            return venda
+            val pessoa = Pessoa( id, registro.getString( 1 ).toString(), registro.getInt( 2 ).toString() )
+            return pessoa
         } else {
             return null
         }
@@ -82,9 +73,9 @@ class DatabaseHandler( context : Context ) : SQLiteOpenHelper ( context, DATABAS
         while( registro.moveToNext() ) {
             saida.append( registro.getInt( 0 ) )
             saida.append( " " )
-            saida.append( registro.getInt( 1 ) )
+            saida.append( registro.getString( 1 ) )
             saida.append( " " )
-            saida.append( registro.getInt( 2 ) )
+            saida.append( registro.getString( 2 ) )
             saida.append( "\n" )
         }
 
@@ -92,6 +83,15 @@ class DatabaseHandler( context : Context ) : SQLiteOpenHelper ( context, DATABAS
 
     }
 
+    override fun onCreate(db: SQLiteDatabase?) {
 
+        db?.execSQL( "CREATE TABLE IF NOT EXISTS ${TABLE_NAME} ( ${KEY_ID} INTEGER PRIMARY KEY AUTOINCREMENT," +
+                " ${KEY_NOME} TEXT, ${KEY_TELEFONE} TEXT )")
+    }
+
+    override fun onUpgrade(db: SQLiteDatabase?, p1: Int, p2: Int) {
+        db?.execSQL( "DROP TABLE ${TABLE_NAME}" )
+        onCreate( db )
+    }
 
 }

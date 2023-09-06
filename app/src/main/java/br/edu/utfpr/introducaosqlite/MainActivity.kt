@@ -1,94 +1,69 @@
 package br.edu.utfpr.introducaosqlite
 
-import android.annotation.SuppressLint
 import android.content.ContentValues
-import android.content.Context
-import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
+import br.edu.utfpr.introducaosqlite.database.DatabaseHandler
+import br.edu.utfpr.introducaosqlite.entity.Pessoa
 import java.lang.StringBuilder
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var banco: SQLiteDatabase
+    private lateinit var banco: DatabaseHandler
     private lateinit var etCod: EditText
-    private lateinit var etQtd: EditText
-    private lateinit var etValor: EditText
+    private lateinit var etNome: EditText
+    private lateinit var etTelefone: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         etCod = findViewById( R.id.etCodLanc )
-        etQtd = findViewById( R.id.etQtdLanc )
-        etValor = findViewById( R.id.etValorLanc )
+        etNome = findViewById( R.id.etNomeLanc )
+        etTelefone = findViewById( R.id.etTelefoneVenc )
 
-        banco = SQLiteDatabase.openOrCreateDatabase(
-            this.getDatabasePath( "dbfile.sqlite"),
-            null
-        )
-
-
-        banco.execSQL( "CREATE TABLE IF NOT EXISTS vendas ( _id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                " qtd INTEGER, valor REAL )" )
+        banco = DatabaseHandler( this )
 
     }
 
     fun btIncluirOnClick(view: View) {
-        val registro = ContentValues()
-        registro.put( "qtd", etQtd.text.toString() )
-        registro.put( "valor", etValor.text.toString() )
+        val registro = Pessoa( 0, etNome.text.toString(), etTelefone.text.toString())
 
-        banco.insert( "vendas", null, registro )
+        banco.incluir( registro )
 
         Toast.makeText( this, "Inclusão efetuada com sucesso", Toast.LENGTH_LONG ).show()
     }
 
     fun btListarOnClick(view: View) {
-        val registro = banco.query( "vendas",
-            null, null, null, null, null, null );
-
-        var saida = StringBuilder()
-
-        while( registro.moveToNext() ) {
-            saida.append( registro.getInt( 0 ) )
-            saida.append( " " )
-            saida.append( registro.getInt( 1 ) )
-            saida.append( " " )
-            saida.append( registro.getInt( 2 ) )
-            saida.append( "\n" )
-        }
+        val saida = banco.listar()
 
         Toast.makeText( this, saida.toString(), Toast.LENGTH_LONG ).show()
     }
 
     fun btAlterarOnClick(view: View) {
-        val registro = ContentValues()
-        registro.put( "qtd", etQtd.text.toString() )
-        registro.put( "valor", etValor.text.toString() )
+        val registro = Pessoa( etCod.text.toString().toInt(), etNome.text.toString(), etTelefone.text.toString())
 
-        banco.update( "vendas", registro, "_id = ${etCod.text.toString()}", null  )
+        banco.alterar( registro )
 
         Toast.makeText( this, "Alteração efetuada com sucesso", Toast.LENGTH_LONG ).show()
     }
 
     fun btExcluirOnClick(view: View) {
-        banco.delete( "vendas", "_id = ${etCod.text.toString()}", null  )
+        banco.excluir( etCod.text.toString().toInt()  )
 
-        Toast.makeText( this, "Alteração efetuada com sucesso", Toast.LENGTH_LONG ).show()
+        Toast.makeText( this, "Exclusão efetuada com sucesso", Toast.LENGTH_LONG ).show()
     }
 
     fun btPesquisarOnClick(view: View) {
-        val registro = banco.query( "vendas", null,
-            "_id = ${etCod.text.toString()}",
-            null, null, null, null );
+        val registro = banco.pesquisar( etCod.text.toString().toInt() )
 
-        if( registro.moveToNext() ) {
-            etQtd.setText( registro.getInt( 1 ).toString() )
-            etValor.setText( registro.getInt( 2 ).toString() )
+
+        if( registro != null  ) {
+            etNome.setText( registro.nome )
+            etTelefone.setText( registro.telefone )
         } else {
             Toast.makeText( this, "Registro não encontrado", Toast.LENGTH_LONG ).show()
         }
