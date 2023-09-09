@@ -2,6 +2,7 @@ package br.edu.utfpr.introducaosqlite.database
 
 import android.content.ContentValues
 import android.content.Context
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import br.edu.utfpr.introducaosqlite.entity.Pessoa
@@ -62,24 +63,33 @@ class DatabaseHandler( context : Context ) : SQLiteOpenHelper ( context, DATABAS
 
     }
 
-    fun listar() : String {
+    fun listar() : MutableList<Pessoa> {
+
         val db = this.writableDatabase
 
         val registro = db.query( TABLE_NAME,
-            null, null, null, null, null, null );
+            null, null, null, null, null, null )
 
         var saida = StringBuilder()
 
+        val registros = mutableListOf<Pessoa>()
+
         while( registro.moveToNext() ) {
-            saida.append( registro.getInt( 0 ) )
-            saida.append( " " )
-            saida.append( registro.getString( 1 ) )
-            saida.append( " " )
-            saida.append( registro.getString( 2 ) )
-            saida.append( "\n" )
+            val pessoa = Pessoa( registro.getInt( 0 ), registro.getString( 1 ), registro.getString( 2 ) )
+            registros.add( pessoa )
         }
 
-        return saida.toString()
+        return registros
+
+    }
+
+    fun listarCursor() : Cursor {
+        val db = this.writableDatabase
+
+        val registros = db.query( TABLE_NAME,
+            null, null, null, null, null, null )
+
+        return registros
 
     }
 
