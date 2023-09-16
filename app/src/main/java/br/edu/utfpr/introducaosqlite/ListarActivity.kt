@@ -1,7 +1,9 @@
 package br.edu.utfpr.introducaosqlite
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.SimpleCursorAdapter
@@ -19,14 +21,22 @@ class ListarActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_listar)
 
-        banco = DatabaseHandler( this )
-        val cursor = banco.listarCursor()
-
-        val adapter = MeuAdapter( this, cursor )
-
         lvRegistros = findViewById( R.id.lvRegistros )
-        lvRegistros.adapter = adapter
 
+        banco = DatabaseHandler( this )
+
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val cursor = banco.listarCursor()
+        val adapter = MeuAdapter( this, cursor )
+        lvRegistros.adapter = adapter
+    }
+
+    fun btIncluirOnClick(view: View) {
+        val intent = Intent( this, MainActivity::class.java )
+        startActivity( intent )
     }
 
     /*fun recuperaArrayString( registros : MutableList<Pessoa> ) : MutableList<String> {

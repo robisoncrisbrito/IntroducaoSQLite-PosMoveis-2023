@@ -23,6 +23,7 @@
         android:layout_marginStart="80dp"
         android:layout_marginTop="16dp"
         android:ems="10"
+        android:enabled="false"
         android:inputType="number"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -68,38 +69,18 @@
         app:layout_constraintTop_toTopOf="@+id/etTelefoneVenc" />
 
     <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:onClick="btIncluirOnClick"
-        android:text="Incluir"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etTelefoneVenc" />
-
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:onClick="btListarOnClick"
-        android:text="Listar"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button5" />
-
-    <Button
         android:id="@+id/button3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:text="Alterar"
+        android:layout_marginTop="16dp"
         android:onClick="btAlterarOnClick"
+        android:text="Salvar"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button" />
+        app:layout_constraintTop_toBottomOf="@+id/etTelefoneVenc" />
 
     <Button
-        android:id="@+id/button4"
+        android:id="@+id/btExcluir"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -109,12 +90,13 @@
         app:layout_constraintTop_toBottomOf="@+id/button3" />
 
     <Button
-        android:id="@+id/button5"
+        android:id="@+id/btPesquisar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:text="Pesquisar"
         android:onClick="btPesquisarOnClick"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button4" />
+        app:layout_constraintTop_toBottomOf="@+id/btExcluir" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
